@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eid Mubarak</title>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: radial-gradient(ellipse at top, #0d1f3c 0%, #040c1a 100%);
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Georgia, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* --- TWINKLING STARS --- */
+.star {
+  position: fixed;
+  border-radius: 50%;
+  background: white;
+  pointer-events: none;
+  animation: twinkle var(--tw, 3s) ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  0%   { opacity: .12; transform: scale(.7); }
+  100% { opacity: 1;   transform: scale(1.5); }
+}
+
+/* --- SHOOTING STARS --- */
+.shoot {
+  position: fixed;
+  height: 2px;
+  background: linear-gradient(to left, white, transparent);
+  border-radius: 2px;
+  pointer-events: none;
+  opacity: 0;
+  animation: shootAnim var(--sd, 6s) linear infinite;
+}
+@keyframes shootAnim {
+  0%   { opacity: 0;   transform: translate(0,0) rotate(-35deg); }
+  8%   { opacity: .95; }
+  55%  { opacity: 0;   transform: translate(-320px, 320px) rotate(-35deg); }
+  100% { opacity: 0;   transform: translate(-320px, 320px) rotate(-35deg); }
+}
+
+/* --- CRESCENT MOON --- */
+.moon-wrap {
+  position: fixed;
+  top: 28px;
+  right: 55px;
+  pointer-events: none;
+  z-index: 1;
+  animation: moonPulse 4s ease-in-out infinite alternate;
+}
+@keyframes moonPulse {
+  from { filter: drop-shadow(0 0 8px #FFD700) drop-shadow(0 0 16px #FF8C00); }
+  to   { filter: drop-shadow(0 0 22px #FFD700) drop-shadow(0 0 44px #FF8C00); }
+}
+
+/* --- MOSQUE SILHOUETTE --- */
+.mosque-wrap {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1100px;
+  pointer-events: none;
+  opacity: .07;
+  z-index: 0;
+}
+
+/* --- FLOATING ISLAMIC SYMBOLS --- */
+.float-sym {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: floatUp var(--fd, 10s) linear infinite;
+}
+@keyframes floatUp {
+  0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
+  12%  { opacity: .55; }
+  85%  { opacity: .3; }
+  100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
+}
+
+/* --- FLOATING ARABIC CALLIGRAPHY --- */
+.arabic-sym {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  color: rgba(255,215,0,.11);
+  opacity: 0;
+  animation: arabicFloat var(--ad, 13s) linear infinite;
+}
+@keyframes arabicFloat {
+  0%   { transform: translateY(108vh); opacity: 0; }
+  10%  { opacity: 1; }
+  88%  { opacity: .8; }
+  100% { transform: translateY(-12vh); opacity: 0; }
+}
+
+/* --- GEOMETRIC 8-POINTED STARS --- */
+.geo-star {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: geoFloat var(--gd, 14s) ease-in-out infinite;
+}
+@keyframes geoFloat {
+  0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
+  15%  { opacity: .28; }
+  82%  { opacity: .16; }
+  100% { transform: translateY(-15vh) rotate(180deg); opacity: 0; }
+}
+
+/* --- CONFETTI --- */
+.confetti {
+  position: fixed;
+  top: -12px;
+  pointer-events: none;
+  z-index: 20;
+  animation: confFall var(--cd, 3s) linear var(--delay, 0s) infinite;
+  border-radius: var(--br, 2px);
+}
+@keyframes confFall {
+  0%   { transform: translateY(0)     rotate(0deg);   opacity: 1; }
+  100% { transform: translateY(110vh) rotate(740deg); opacity: 0; }
+}
+
+/* --- DRIFTING ISLAMIC ICONS --- */
+.dua-hand {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  font-size: 1.6rem;
+  opacity: 0;
+  animation: handDrift var(--hd, 11s) ease-in-out infinite;
+}
+@keyframes handDrift {
+  0%   { transform: translateY(108vh) scale(.8); opacity: 0; }
+  10%  { opacity: .35; }
+  90%  { opacity: .2; }
+  100% { transform: translateY(-12vh) scale(1.1); opacity: 0; }
+}
+
+/* --- CONTAINER --- */
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 90px 20px 50px;
+  position: relative;
+  z-index: 2;
+}
+
+/* --- INTRO HEADING --- */
+.intro-title {
+  font-size: 1.6rem;
+  color: #FFD700;
+  letter-spacing: 3px;
+  text-align: center;
+  margin-bottom: 6px;
+  text-shadow: 0 0 18px rgba(255,215,0,.65);
+}
+.intro-sub {
+  font-size: .88rem;
+  color: rgba(255,255,255,.45);
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+/* --- SLIDER --- */
+.slider-outer   { width: 100%; max-width: 680px; }
+.slider-viewport { overflow: hidden; width: 100%; padding: 14px 0; }
+.slider-track {
+  display: flex;
+  gap: 14px;
+  padding-left: calc(50% - 95px);
+  padding-right: calc(50% - 95px);
+  transition: transform .48s cubic-bezier(.25,.46,.45,.94);
+  will-change: transform;
+  cursor: grab;
+  user-select: none;
+}
+.slider-track.grabbing { cursor: grabbing; transition: none; }
+
+/* --- LANGUAGE CARDS --- */
+.lang-card {
+  flex: 0 0 190px;
+  height: 155px;
+  background: linear-gradient(145deg, #19366a, #24529f);
+  border-radius: 22px;
+  border: 1px solid rgba(255,215,0,.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0,0,0,.45);
+  transition: transform .3s, box-shadow .3s, border-color .3s;
+  position: relative;
+  overflow: hidden;
+}
+.lang-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,215,0,.07) 0%, transparent 55%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.lang-card:hover {
+  transform: translateY(-7px) scale(1.04);
+  box-shadow: 0 14px 42px rgba(255,215,0,.32);
+  border-color: rgba(255,215,0,.55);
+}
+.lang-card.active-card {
+  border-color: rgba(255,215,0,.6);
+  box-shadow: 0 0 36px rgba(255,215,0,.38);
+}
+
+.card-flag { font-size: 2.1rem; line-height: 1; }
+.card-lang { display: none; }
+.card-tap  {
+  font-size: .88rem;
+  color: #FFD700;
+  font-weight: 600;
+  padding: 6px 16px;
+  background: rgba(255,215,0,.1);
+  border-radius: 22px;
+  border: 1px solid rgba(255,215,0,.22);
+  transition: background .2s;
+}
+.lang-card:hover .card-tap { background: rgba(255,215,0,.22); }
+
+/* --- DOTS & ARROWS --- */
+.dots { display: flex; justify-content: center; gap: 9px; margin-top: 16px; }
+.dot  {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,215,0,.25);
+  cursor: pointer;
+  transition: .3s;
+}
+.dot.active { background: #FFD700; transform: scale(1.4); }
+
+.arrows { display: flex; justify-content: center; gap: 14px; margin-top: 14px; }
+.arr-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(255,215,0,.12);
+  border: 1px solid rgba(255,215,0,.3);
+  color: #FFD700;
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .25s;
+}
+.arr-btn:hover { background: rgba(255,215,0,.3); transform: scale(1.1); }
+
+/* --- MESSAGE SECTION --- */
+.message { display: none; width: 100%; max-width: 680px; }
+.message.show { display: block; animation: msgIn .95s ease forwards; }
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(38px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);   }
+}
+.msg-card {
+  background: linear-gradient(145deg, rgba(18,46,95,.9), rgba(32,70,148,.88));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 26px;
+  padding: 42px 48px;
+  border: 1px solid rgba(255,215,0,.24);
+  box-shadow: 0 0 65px rgba(255,215,0,.13), 0 22px 65px rgba(0,0,0,.55);
+}
+.msg-title {
+  font-size: 2.4rem;
+  color: #FFD700;
+  text-shadow: 0 0 22px rgba(255,215,0,.55);
+  margin-bottom: 24px;
+  text-align: center;
+}
+.msg-body {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: rgba(255,255,255,.92);
+  text-align: left;
+  white-space: pre-line;
+}
+.msg-sign {
+  margin-top: 24px;
+  text-align: right;
+  color: #FFD700;
+  font-style: italic;
+  font-size: 1.1rem;
+  opacity: .9;
+}
+.back-btn {
+  display: block;
+  margin: 20px auto 0;
+  padding: 11px 32px;
+  background: rgba(255,215,0,.12);
+  border: 1px solid rgba(255,215,0,.38);
+  color: #FFD700;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: .95rem;
+  letter-spacing: 1px;
+  transition: .25s;
+}
+.back-btn:hover { background: rgba(255,215,0,.28); transform: scale(1.04); }
+
+@media (max-width: 540px) {
+  .msg-card  { padding: 28px 22px; }
+  .msg-title { font-size: 1.75rem; }
+  .msg-body  { font-size: .93rem; }
+  .lang-card { flex: 0 0 148px; height: 135px; }
+  .slider-track { padding-left: calc(50% - 74px); padding-right: calc(50% - 74px); }
+  .moon-wrap { right: 14px; top: 14px; }
+  .intro-title { font-size: 1.2rem; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="music" loop>
+  <source src="eidmubarak.mp3" type="audio/mpeg">
+</audio>
+
+<!-- CRESCENT MOON -->
+<div class="moon-wrap">
+  <svg width="78" height="78" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="moonGrad" cx="38%" cy="36%">
+        <stop offset="0%"   stop-color="#FFF9C4"/>
+        <stop offset="100%" stop-color="#FFD700"/>
+      </radialGradient>
+    </defs>
+    <circle cx="50" cy="50" r="43" fill="url(#moonGrad)"/>
+  </svg>
+</div>
+
+<!-- MOSQUE SILHOUETTE -->
+<div class="mosque-wrap">
+  <svg viewBox="0 0 1000 220" xmlns="http://www.w3.org/2000/svg" fill="white">
+    <rect x="42"  y="40"  width="24" height="180"/>
+    <ellipse cx="54"  cy="40"  rx="12" ry="20"/>
+    <rect x="49"  y="20"  width="10" height="22"/>
+    <ellipse cx="200" cy="115" rx="68" ry="62"/>
+    <rect x="132" y="115" width="136" height="105"/>
+    <ellipse cx="500" cy="68" rx="108" ry="95"/>
+    <rect x="392" y="68"  width="216" height="152"/>
+    <ellipse cx="800" cy="115" rx="68" ry="62"/>
+    <rect x="732" y="115" width="136" height="105"/>
+    <rect x="934" y="40"  width="24" height="180"/>
+    <ellipse cx="946" cy="40"  rx="12" ry="20"/>
+    <rect x="941" y="20"  width="10" height="22"/>
+    <rect x="0"   y="210" width="1000" height="14"/>
+  </svg>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- SLIDER SECTION -->
+  <div id="sliderSection">
+    <div class="intro-title">&#x1F319; Eid Mubarak 1447 H &#x1F319;</div>
+    <div class="intro-sub">&#x2726; Slide &amp; choose your language &#x2726;</div>
+
+    <div class="slider-outer">
+      <div class="slider-viewport">
+        <div class="slider-track" id="sliderTrack">
+
+          <div class="lang-card" onclick="openCard('id')">
+            <div class="card-flag">&#x1F1EE;&#x1F1E9;</div>
+            <div class="card-tap">Ketuk untuk Buka</div>
+          </div>
+
+          <div class="lang-card" onclick="openCard('hi')">
+            <div class="card-flag">&#x1F1EE;&#x1F1F3;</div>
+            <div class="card-tap">Tap Karein</div>
+          </div>
+
+          <div class="lang-card" onclick="openCard('ph')">
+            <div class="card-flag">&#x1F1F5;&#x1F1ED;</div>
+            <div class="card-tap">I-tap para Buksan</div>
+          </div>
+
+          <div class="lang-card" onclick="openCard('de')">
+            <div class="card-flag">&#x1F1E9;&#x1F1EA;</div>
+            <div class="card-tap">Tippen zum &#xD6;ffnen</div>
+          </div>
+
+          <div class="lang-card" onclick="openCard('en')">
+            <div class="card-flag">&#x1F1EC;&#x1F1E7;</div>
+            <div class="card-tap">Tap to Open</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="dots" id="dotsContainer">
+        <div class="dot active" data-idx="0"></div>
+        <div class="dot"        data-idx="1"></div>
+        <div class="dot"        data-idx="2"></div>
+        <div class="dot"        data-idx="3"></div>
+        <div class="dot"        data-idx="4"></div>
+      </div>
+
+      <div class="arrows">
+        <button class="arr-btn" id="prevBtn">&#8592;</button>
+        <button class="arr-btn" id="nextBtn">&#8594;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MESSAGE SECTION (hidden until card tapped) -->
+  <div class="message" id="msgSection">
+    <div class="msg-card">
+      <div class="msg-title" id="msgTitle"></div>
+      <div class="msg-body"  id="msgBody"></div>
+      <div class="msg-sign"  id="msgSign"></div>
+    </div>
+    <button class="back-btn" onclick="goBack()">&#8592; Back</button>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   MESSAGES  (5 languages)
+   ============================================================ */
+var MSGS = {
+  id: {
+    title: "Eid Mubarak \uD83C\uDF19",
+    body: "Dengan mendekatnya Eid esok hari, saya dengan tulus memohon maaf lahir dan batin atas segala ucapan atau perbuatan yang mungkin telah menyakiti hatimu, baik yang disengaja maupun yang tidak disengaja.\n\nRamadan Mubarak, semoga Allah menerima seluruh \u0639\u0628\u0627\u062F\u0627\u062A (ibadah) kita dan melimpahkan keberkahan kepada kita semua.\n\nSemoga kamu merayakan Eid yang penuh kebahagiaan dan keberkahan, dipenuhi dengan cinta, kegembiraan, dan kemakmuran. Semoga hari istimewa ini semakin mempererat hubunganmu dengan orang-orang tercinta, dan semoga seluruh doamu dikabulkan.\n\nSelamat Idul Fitri 1447 H . Semoga Allah menerima amal ibadah kita, mengampuni dosa-dosa kita, dan memberkahi kita semua.",
+    sign: "\u2014 Siti Aalifa"
+  },
+  hi: {
+    title: "Eid Mubarak \uD83C\uDF19",
+    body: "Kal Eid nazdik aane ke saath, main dil ki gehraiyoan se aapse maafi maangti hoon \u2014 shareerik aur aatmik dono roop se \u2014 kisi bhi aise shabd ya kaarya ke liye jo aapko thes pahuncha'e hoan, chahe jaanboojhkar ho ya anjaane mein.\n\nRamzan Mubarak, Allah hamari sabhi \u0639\u0628\u0627\u062F\u0627\u062A (ibadat) ko kabool farma'e aur hum par apni rehmat barsaa'e.\n\nAapke liye dheronon du'aen aur khushiyaan! Yeh Eid aapke jeevan mein pyaar, khushi aur samriddhi lekar aaye. Yeh khaas din aapko apne priyajanon ke aur karib laaye aur aapki sabhi du'aen kabool hoan.\n\nEid al-Fitr 1447 Hijri Mubarak ho \uD83C\uDF19 Allah hamare nek aamaal ko kabool kare, hamare gunaahon ko maaf kare, aur hum sabko apni barkat se nawaaze.",
+    sign: "\u2014 Siti Aalifa"
+  },
+  ph: {
+    title: "Eid Mubarak \uD83C\uDF19",
+    body: "Sa paglapit ng Eid bukas, taos-puso akong humihingi ng iyong kapatawaran \u2014 sa katawan at sa diwa \u2014 para sa anumang salita o gawa na maaaring nakasakit sa iyo, sinasadya man o hindi.\n\nRamadan Mubarak, nawa ay tanggapin ng Allah ang lahat ng ating \u0639\u0628\u0627\u062F\u0627\u062A (mga gawa ng pagsamba) at pagkalooban tayo ng Kanyang mga biyaya.\n\nNagnanais ako para sa iyo ng isang masaya at mapagpalang Eid na puno ng pagmamahal, kaligayahan, at kasaganaan. Nawa ang espesyal na araw na ito ay magpalapit sa iyo sa iyong mga mahal sa buhay at nawa ang lahat ng iyong mga panalangin ay masagot.\n\nMaligayang Eid al-Fitr 1447 H . Nawa ay tanggapin ng Allah ang ating mga gawa, patawarin ang ating mga kasalanan, at pagpalain tayong lahat.",
+    sign: "\u2014 Siti Aalifa"
+  },
+  de: {
+    title: "Eid Mubarak \uD83C\uDF19",
+    body: "Da Eid morgen naht, bitte ich dich aufrichtig um Vergebung \u2014 k\u00F6rperlich und spirituell \u2014 f\u00FCr jegliche Worte oder Handlungen, die dich verletzt haben k\u00F6nnten, ob absichtlich oder unabsichtlich.\n\nRamadan Mubarak, m\u00F6ge Allah alle unsere \u0639\u0628\u0627\u062F\u0627\u062A (Gottesdiensthandlungen) annehmen und uns mit Seinem Segen \u00FCberh\u00E4ufen.\n\nIch w\u00FCnsche dir ein freudvolles und gesegnetes Eid, erf\u00FCllt von Liebe, Gl\u00FCck und Wohlstand. M\u00F6ge dieser besondere Tag dich deinen Liebsten n\u00E4herbringen, und m\u00F6gen all deine Gebete erf\u00F6rt werden.\n\nFrohes Eid al-Fitr 1447 H . M\u00F6ge Allah unsere guten Taten annehmen, unsere S\u00FCnden vergeben und uns alle segnen.",
+    sign: "\u2014 Siti Aalifa"
+  },
+  en: {
+    title: "Eid Mubarak \uD83C\uDF19",
+    body: "With Eid approaching tomorrow, I sincerely seek your forgiveness \u2014 both physically and spiritually \u2014 for any words or actions that may have hurt you, whether intentional or unintentional.\n\nRamadan Mubarak, may Allah accept all our \u0639\u0628\u0627\u062F\u0627\u062A (acts of worship) and grant us His blessings.\n\nI wish you a joyous and blessed Eid filled with love, happiness, and prosperity. May this special day bring you closer to your loved ones and may all your prayers be answered.\n\nHappy Eid al-Fitr 1447 H . May Allah accept our deeds, forgive our sins, and bless us all.",
+    sign: "\u2014 Siti Aalifa"
+  }
+};
+
+/* ============================================================
+   SLIDER LOGIC
+   ============================================================ */
+var track    = document.getElementById('sliderTrack');
+var cards    = Array.from(track.querySelectorAll('.lang-card'));
+var dotsEl   = document.querySelectorAll('#dotsContainer .dot');
+var prevBtn  = document.getElementById('prevBtn');
+var nextBtn  = document.getElementById('nextBtn');
+var GAP      = 18;
+var curIdx   = 0;
+var dragging = false;
+var dragStartX = 0, dragDelta = 0, baseOffset = 0;
+
+function cardStep() { return cards[0].offsetWidth + GAP; }
+
+function goTo(idx) {
+  curIdx = Math.max(0, Math.min(idx, cards.length - 1));
+  baseOffset = curIdx * cardStep();
+  track.style.transform = 'translateX(-' + baseOffset + 'px)';
+  dotsEl.forEach(function(d, i) { d.classList.toggle('active', i === curIdx); });
+  cards.forEach(function(c, i) { c.classList.toggle('active-card', i === curIdx); });
+}
+
+prevBtn.onclick = function() { goTo(curIdx - 1); };
+nextBtn.onclick = function() { goTo(curIdx + 1); };
+dotsEl.forEach(function(d) { d.addEventListener('click', function() { goTo(+d.dataset.idx); }); });
+
+/* Mouse drag */
+track.addEventListener('mousedown', function(e) {
+  dragging = true; dragStartX = e.clientX; dragDelta = 0;
+  track.classList.add('grabbing');
+});
+window.addEventListener('mousemove', function(e) {
+  if (!dragging) return;
+  dragDelta = e.clientX - dragStartX;
+  track.style.transform = 'translateX(-' + (baseOffset - dragDelta) + 'px)';
+});
+window.addEventListener('mouseup', function() {
+  if (!dragging) return;
+  dragging = false; track.classList.remove('grabbing');
+  if (Math.abs(dragDelta) > 50) goTo(curIdx + (dragDelta < 0 ? 1 : -1));
+  else goTo(curIdx);
+  dragDelta = 0;
+});
+
+/* Touch swipe */
+var touchStartX = 0;
+track.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; }, { passive: true });
+track.addEventListener('touchend', function(e) {
+  var diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 42) goTo(curIdx + (diff > 0 ? 1 : -1));
+});
+
+window.addEventListener('load', function() { goTo(1); });
+
+/* ============================================================
+   OPEN CARD / GO BACK
+   ============================================================ */
+function openCard(lang) {
+  var d = MSGS[lang];
+  document.getElementById('msgTitle').textContent = d.title;
+  document.getElementById('msgBody').textContent  = d.body;
+  document.getElementById('msgSign').textContent  = d.sign;
+  document.getElementById('sliderSection').style.display = 'none';
+  var ms = document.getElementById('msgSection');
+  ms.style.display = 'block';
+  void ms.offsetHeight;  /* force reflow for animation */
+  ms.classList.add('show');
+  document.getElementById('music').play().catch(function(){});
+  spawnConfetti();
+}
+
+function goBack() {
+  var ms = document.getElementById('msgSection');
+  ms.classList.remove('show');
+  setTimeout(function() {
+    ms.style.display = 'none';
+    document.getElementById('sliderSection').style.display = 'block';
+  }, 520);
+  var mus = document.getElementById('music');
+  mus.pause(); mus.currentTime = 0;
+  document.querySelectorAll('.confetti').forEach(function(el) { el.remove(); });
+}
+
+/* ============================================================
+   CONFETTI
+   ============================================================ */
+function spawnConfetti() {
+  var colors = ['#FFD700','#fff','#ff6b6b','#4ecdc4','#ff9f43','#c9b8ff','#6cff88','#ff6348'];
+  for (var i = 0; i < 130; i++) {
+    var c = document.createElement('div');
+    c.className = 'confetti';
+    var sz = 6 + Math.random() * 8;
+    var circ = Math.random() > .5;
+    c.style.cssText =
+      'left:' + (Math.random()*100) + 'vw;' +
+      'width:' + sz + 'px;' +
+      'height:' + (circ ? sz : sz*(1.2+Math.random()*.8)) + 'px;' +
+      'background:' + colors[Math.floor(Math.random()*colors.length)] + ';' +
+      '--cd:' + (1.8+Math.random()*3.2) + 's;' +
+      '--delay:' + (Math.random()*2.2) + 's;' +
+      '--br:' + (circ?'50%':'3px') + ';';
+    document.body.appendChild(c);
+  }
+}
+
+/* ============================================================
+   TWINKLING STARS
+   ============================================================ */
+for (var i = 0; i < 95; i++) {
+  var s = document.createElement('div');
+  s.className = 'star';
+  var sz = .5 + Math.random() * 2.6;
+  s.style.cssText = 'left:'+(Math.random()*100)+'vw;top:'+(Math.random()*100)+'vh;' +
+    'width:'+sz+'px;height:'+sz+'px;--tw:'+(1.8+Math.random()*4)+'s;' +
+    'animation-delay:'+(Math.random()*5)+'s;';
+  document.body.appendChild(s);
+}
+
+/* ============================================================
+   SHOOTING STARS
+   ============================================================ */
+for (var i = 0; i < 7; i++) {
+  var s = document.createElement('div');
+  s.className = 'shoot';
+  s.style.cssText = 'left:'+(20+Math.random()*60)+'vw;top:'+(5+Math.random()*38)+'vh;' +
+    'width:'+(55+Math.random()*90)+'px;--sd:'+(5+Math.random()*9)+'s;' +
+    'animation-delay:'+(Math.random()*12)+'s;';
+  document.body.appendChild(s);
+}
+
+/* ============================================================
+   FLOATING ISLAMIC SYMBOLS
+   ============================================================ */
+var SYMS = ['\u262A','\u2726','\u274B','\u273F','\u2B21','\u2728','\uD83C\uDF19','\u2736','\u2748'];
+for (var i = 0; i < 20; i++) {
+  var el = document.createElement('div');
+  el.className = 'float-sym';
+  el.textContent = SYMS[Math.floor(Math.random()*SYMS.length)];
+  el.style.cssText = 'left:'+(Math.random()*100)+'vw;' +
+    'font-size:'+(13+Math.random()*22)+'px;' +
+    'color:rgba(255,215,0,'+(0.13+Math.random()*.22)+');' +
+    '--fd:'+(8+Math.random()*13)+'s;animation-delay:'+(Math.random()*13)+'s;';
+  document.body.appendChild(el);
+}
+
+/* ============================================================
+   FLOATING ARABIC CALLIGRAPHY
+   ============================================================ */
+var ARABIC = [
+  '\u0628\u0650\u0633\u0652\u0645\u0650 \u0627\u0644\u0644\u0651\u064E\u0647',
+  '\u0627\u0644\u0644\u0647 \u0623\u0643\u0628\u0631',
+  '\u0633\u064F\u0628\u0652\u062D\u064E\u0627\u0646\u064E \u0627\u0644\u0644\u0647',
+  '\u0645\u064E\u0627\u0634\u064E\u0627\u0621\u064E \u0627\u0644\u0644\u0647',
+  '\u0627\u0644\u062D\u0645\u062F \u0644\u0644\u0647',
+  '\u0627\u0644\u0644\u0651\u064E\u0647\u064F\u0645\u0651\u064E \u0622\u0645\u0650\u064A\u0646'
+];
+for (var i = 0; i < 9; i++) {
+  var el = document.createElement('div');
+  el.className = 'arabic-sym';
+  el.textContent = ARABIC[Math.floor(Math.random()*ARABIC.length)];
+  el.style.cssText = 'left:'+(Math.random()*88)+'vw;' +
+    'font-size:'+(1.1+Math.random()*.9)+'rem;' +
+    '--ad:'+(10+Math.random()*11)+'s;animation-delay:'+(Math.random()*15)+'s;';
+  document.body.appendChild(el);
+}
+
+/* ============================================================
+   FLOATING 8-POINTED GEOMETRIC STARS
+   ============================================================ */
+function make8Star(fill) {
+  var pts = [];
+  for (var i = 0; i < 16; i++) {
+    var a = Math.PI/8*i - Math.PI/2;
+    var r = i%2===0 ? 46 : 20;
+    pts.push((50+r*Math.cos(a)).toFixed(2)+','+(50+r*Math.sin(a)).toFixed(2));
+  }
+  return '<polygon points="'+pts.join(' ')+'" fill="'+fill+'"/>';
+}
+var NS = 'http://www.w3.org/2000/svg';
+for (var i = 0; i < 7; i++) {
+  var svg = document.createElementNS(NS, 'svg');
+  var sz  = 28 + Math.random()*38;
+  svg.setAttribute('viewBox','0 0 100 100');
+  svg.setAttribute('width', sz);
+  svg.setAttribute('height', sz);
+  svg.innerHTML = make8Star('rgba(255,215,0,'+(0.18+Math.random()*.2)+')');
+  svg.classList.add('geo-star');
+  svg.style.cssText = 'left:'+(Math.random()*95)+'vw;' +
+    '--gd:'+(11+Math.random()*11)+'s;animation-delay:'+(Math.random()*15)+'s;';
+  document.body.appendChild(svg);
+}
+
+/* ============================================================
+   FLOATING DUA / ISLAMIC ICONS
+   ============================================================ */
+var ICONS = ['\uD83E\uDD32','\uD83D\uDD4C','\uD83D\uDCFF','\u262A\uFE0F'];
+for (var i = 0; i < 6; i++) {
+  var el = document.createElement('div');
+  el.className = 'dua-hand';
+  el.textContent = ICONS[Math.floor(Math.random()*ICONS.length)];
+  el.style.cssText = 'left:'+(Math.random()*92)+'vw;' +
+    '--hd:'+(9+Math.random()*10)+'s;animation-delay:'+(Math.random()*14)+'s;';
+  document.body.appendChild(el);
+}
+</script>
+
+</body>
+</html>
